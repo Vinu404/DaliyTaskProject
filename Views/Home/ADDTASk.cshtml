@@ -1,0 +1,668 @@
+﻿@model Daily_Test_Management_project.Models.UserDailyTask
+@{
+    ViewBag.Title = "ADDTASk";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/Registration/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+<link href="~/Content/Registration/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+<!-- Vendor CSS-->
+<link href="~/Content/Registration/vendor/select2/select2.min.css" rel="stylesheet" media="all">
+<link href="~/Content/Registration/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+<!-- Main CSS-->
+
+<link href="~/Content/Registration/css/main.css" rel="stylesheet" />
+<br />
+
+
+<style>
+    #btn {
+        height: 3rem;
+        width: 11rem;
+        margin-left: 7rem
+    }
+
+    #btn1 {
+        height: 3rem;
+        width: 11rem;
+        margin-left: 2rem
+    }
+
+    label {
+        color: red;
+    }
+    .label--desc {
+        color: #504747;
+        margin-top: -26px;
+        font-size: 17px;
+    }
+    #Userdata{
+        margin-top:2rem;
+    }
+</style>
+@Html.Partial("_Modelpopup")
+@Html.Partial("_lodaing")
+
+
+    <div style="margin-top:4.7rem" class="wrapper wrapper--w790">
+        <div class="card card-5">
+            <div class="card-heading">
+                <h2 class="title">Add Task</h2>
+            </div>
+            <div class="card-body">
+                <form id="Userdata">
+                    <div class="form-row m-b-55">
+                        <div class="value">
+                            <div class="row row-space">
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">TechStack</label>
+                                        @Html.DropDownListFor(m => m.TechstackID, new SelectList(Session["Techstack"] as List<Daily_Test_Management_project.Models.TechStach>, "TechstackID", "TechStack"), "--Please Select--", new { @class = "form-control", @required = true })
+                                        @Html.ValidationMessageFor(m => m.TechstackID, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">JIRAID</label>
+                                        <input autocomplete="off" class="form-control" data-val="true" data-val-required="JIRAID IS REQUIRED" id="JiraID" maxlength="25" name="JiraID" placeholder="Enter JIRAID" required type="text" value="">
+                                        @*@Html.TextBoxFor(m => m.JiraID, "", new { @class = "form-control", @autocomplete = "off", @maxlength = "25", @placeholder = "Enter JIRAID", @required = true })*@
+                                        @Html.ValidationMessageFor(m => m.JiraID, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-row m-b-55">
+                        <div class="value">
+                            <div class="row row-space">
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">Developer Name</label>
+                                        @Html.DropDownListFor(m => m.DeveloperID, new SelectList(""), "--Please Select --", new { @class = "form-control", @required = true })
+                                        @Html.ValidationMessageFor(m => m.DeveloperID, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">Department Name</label>
+                                        @Html.DropDownList("DepartmentID", new SelectList(Session["Deptment"] as List<Daily_Test_Management_project.Models.Department>, "DepartmentID", "DepartmentName"), new { @class = "form-control", @required = true })
+                                        @Html.ValidationMessageFor(m => m.DepartmentID, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-row m-b-55">
+                        <div class="value">
+                            <div class="row row-space">
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">Module</label>
+                                        @Html.DropDownListFor(m => m.ModuleID, new SelectList(Session["module"] as List<Daily_Test_Management_project.Models.Module>, "Module_ID", "Module_Name"), new { @class = "form-control", @required = true })
+                                        @Html.ValidationMessageFor(m => m.ModuleID, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">Description</label>
+                                        <textarea class="form-control" cols="20" id="Description" name="Description" placeholder="Enter Description" required rows="2"></textarea>
+                                        @* @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @placeholder = "Enter Description", @required = true })*@
+                                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-row m-b-55">
+                        <div class="value">
+                            <div class="row row-space">
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label  class="label--desc">Start Date</label>
+                                        @Html.TextBoxFor(m => m.StartDate, "{0:dd:MM:yyyy}", new { @class = "form-control", @autocomplete = "off", @placeholder = "dd/mm/yyyy", @type = "text", @required = true })
+                                        @Html.ValidationMessageFor(m => m.StartDate, "", new { @class = "text-danger" })
+                                        @*<label id="Startinvalid" class></label>*@
+                                        <label id="l1"></label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label id="Endinvalid" class="label--desc">End Date</label>
+                                        @Html.TextBoxFor(m => m.EndDate, "{0:dd:MM:yyyy}", new { @class = "form-control", @autocomplete = "off", @placeholder = "dd/mm/yyyy", @type = "text", @required = true })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row m-b-55">
+                        <div class="value">
+                            <div class="row row-space">
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">Status</label>
+                                        @Html.DropDownList("StatusID", new SelectList(Session["status"] as List<Daily_Test_Management_project.Models.status>, "StatusID", "Status"), "--Please Select --", new { @class = "form-control", @required = true })
+
+
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <label class="label--desc">Remark</label>
+                                        <textarea autocomplete="off" class="form-control" cols="20" id="Remark" maxlength="25" name="Remark" placeholder="Enter Remark" required rows="2"></textarea>
+                                        @*@Html.TextAreaFor(m => m.Remark, new { @class = "form-control", @autocomplete = "off", @maxlength = "25", @placeholder = "Enter Remark", @required = true })*@
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="margin-top:-1rem">
+                        @*<input id="btn" type="submit" value="Add" class="btn btn-primary" />*@
+                        <button id="btn" class="btn btn-primary">Add</button>
+                        <input id="btn1" type="reset" value="Cancel" class="btn btn-danger" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script>
+
+    $("#Userdata").validate({
+        rules: {
+            TechstackID: {
+                required: true
+            }
+
+        },
+        messages: {
+            TechstackID: {
+                required: "Techstack ID Required"
+            },
+            JiraID: {
+                required: "Jirad ID Required"
+            },
+            DeveloperID: {
+                required: "Developer Name Required"
+            },
+            DepartmentID: {
+                required: "Department Name Required"
+            },
+            ModuleID: {
+                required: "Module Id Required"
+            },
+            Description: {
+                required: "Description is Required"
+            },
+            StartDate: {
+                required: "Start Date  Required"
+            },
+            EndDate: {
+                required: "EndDate is Required"
+            },
+            StatusID: {
+                required: "Status is Required"
+            },
+            Remark: {
+                required: "Remark is Required"
+            },
+
+        },
+
+
+
+    });
+
+
+</script>
+
+
+@*<script>
+    var Add = function () {
+        debugger;
+        var start_date = $("#StartDate").val(); //2013-09-5
+        var end_date = $("#EndDate").val(); //2013-09-10
+        start_date = start_date.split('/');
+        end_date = end_date.split('/');
+
+        var new_start_date = new Date(start_date[2], start_date[0], start_date[1]);
+        var new_end_date = new Date(end_date[2], end_date[0], end_date[1]);
+        var data = {
+           TechstackID : $("#TechstackID").val(),
+            JiraID: $("#JiraID").val(),
+            DeveloperID: $("#DeveloperID").val(),
+            DepartmentID: $("#DepartmentID").val(),
+            ModuleID: $("#ModuleID").val(),
+            Description: $("#Description").val(),
+            StartDate: $("#StartDate").val(),
+            EndDate: $("#EndDate").val(),
+            StatusID: $("#StatusID").val(),
+            Remark: $("#Remark").val()
+        }
+       
+        
+
+
+
+
+    }
+
+    y
+
+    //    $("#btn").click(function () {
+
+
+    //        Add();
+
+    //    });
+    //});
+
+    function clear() {
+        $("#TechstackID").val(''),
+            $("#JiraID").val(''),
+            $("#DeveloperID").val(''),
+            $("#DepartmentID").val(''),
+            $("#ModuleID").val(''),
+            $("#Description").val(''),
+            $("#StartDate").val(''),
+            $("#EndDate").val(''),
+            $("#StatusID").val(''),
+            $("#Remark").val('')
+    }
+
+</script>*@
+
+
+<script>
+    $("#StartDate").datepicker({
+        /*minDate: new Date(),*/
+        /*maxDate: new Date(),*/
+        dateFormat: 'dd/mm/yy'
+
+    }).datepicker('setDate', 'today');
+
+    $("#EndDate").datepicker({
+        /*minDate: new Date(),*/
+        dateFormat: 'dd/mm/yy'
+
+    });
+
+    var val2;
+    var val4;
+    $("#StartDate").datepicker().on("change", function () {
+
+        debugger;
+        val2 = Datecheck("StartDate", "Startinvalid");
+        
+        if (val2 == false && val4 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else if (val2 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else if (val4 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+
+        else if (val2 == true && val4 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else if (val2 == false && val4 == true) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else {
+            $("#btn").removeAttr('disabled');
+            $("#Startinvalid").html('Start Date');
+        }
+
+
+    });
+
+
+    $("#EndDate").datepicker().on("change", function () {
+        debugger;
+        val4 = Datecheck("EndDate", "Endinvalid");
+        if (val2 == false && val4 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else if (val2 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else if (val4 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+
+        else if (val2 == true && val4 == false) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else if (val2 == false && val4 == true) {
+            $("#btn").attr('disabled', 'disabled');
+        }
+        else {
+            $("#btn").removeAttr('disabled');
+            $("#Endinvalid").html('End Date');
+
+        }
+    });
+
+
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        var val1;
+        var val3;
+        $("#StartDate").on('onselect keyup change', function () {
+            val1 = Datecheck("StartDate", "Startinvalid");
+
+            if (val1 == false && val3 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else if (val1 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else if (val3 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else if (val1 == true && val3 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else if (val1 == false && val3 == true) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else {
+                $("#btn").removeAttr('disabled');
+                $("#Startinvalid").html('Start Date');
+
+
+            }
+        });
+
+        $("#EndDate").on('onselect keyup change', function () {
+            val3 = Datecheck("EndDate", "Endinvalid");
+            if (val1 == false && val3 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else if (val1 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else if (val3 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else if (val1 == true && val3 == false) {
+                $("#btn").attr('disabled', 'disabled');
+            }
+            else {
+                $("#btn").removeAttr('disabled');
+                $("#Endinvalid").html('End Date');
+
+            }
+
+        });
+
+
+
+
+
+    });
+
+    function Datecheck(value, option) {
+
+
+        var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+        var Val_date = $('#' + value).val();
+        if (Val_date.match(dateformat)) {
+            var seperator1 = Val_date.split('/');
+            var seperator2 = Val_date.split('-');
+
+            if (seperator1.length > 1) {
+                var splitdate = Val_date.split('/');
+            }
+            else if (seperator2.length > 1) {
+                var splitdate = Val_date.split('-');
+            }
+            var dd = parseInt(splitdate[0]);
+            var mm = parseInt(splitdate[1]);
+            var yy = parseInt(splitdate[2]);
+            var ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if (mm == 1 || mm > 2) {
+                if (dd > ListofDays[mm - 1]) {
+                    $("#" + option).html("Invalid date formate!").css("color", "Red");;
+                    $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("#btn").attr('disabled', 'disabled');
+                    return false;
+                }
+            }
+            if (mm == 2) {
+                var lyear = false;
+                if ((!(yy % 4) && yy % 100) || !(yy % 400)) {
+                    lyear = true;
+                }
+                if ((lyear == false) && (dd >= 29)) {
+                    $("#" + option).html("Invalid date formate!").css("color", "Red");;
+                    $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("#btn").attr('disabled', 'disabled');
+                    return false;
+                }
+
+
+                if ((lyear == true) && (dd > 29)) {
+                    $("#" + option).html("Invalid date formate!").css("color", "Red");;
+                    $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("#btn").attr('disabled', 'disabled');
+                    return false;
+                }
+
+
+
+            }
+        }
+        else {
+            $("#" + option).html("Invalid date formate!").css("color", "Red");
+            $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+            $("#btn").attr('disabled', 'disabled');
+            return false;
+        }
+        $("#" + value).removeAttr('style');
+        $("#" + option).removeAttr('style');
+        $("#btn").removeAttr('disabled');
+        return true;
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#btn").click(function () {
+            debugger;
+            var start_date = $("#StartDate").val(); //2013-09-5
+            var end_date = $("#EndDate").val(); //2013-09-10
+            
+            var d1 = start_date.split("/");
+            var d2 = end_date.split("/");
+
+            d1 = d1[2].concat(d1[1], d1[0]);
+            d2 = d2[2].concat(d2[1], d2[0]);
+
+            var data = {
+                TechstackID: $("#TechstackID").val(),
+                JiraID: $("#JiraID").val(),
+                DeveloperID: $("#DeveloperID").val(),
+                DepartmentID: $("#DepartmentID").val(),
+                ModuleID: $("#ModuleID").val(),
+                Description: $("#Description").val(),
+                StartDate: $("#StartDate").val(),
+                EndDate: $("#EndDate").val(),
+                StatusID: $("#StatusID").val(),
+                Remark: $("#Remark").val()
+            }
+            if (data.TechID == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.JiraID == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.DeveloperID == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.DepartmentID == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.ModuleID == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.Description == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.StartDate == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.EndDate == "") {
+                $("lable").css("required", "true")
+            }
+            else if (data.Remark == "") {
+                $("lable").css("required", "true")
+            }
+            else if (parseInt(d1) > parseInt(d2)) {
+                $("#btn").attr('disabled', 'disabled');
+                $("#l1").html('Date should be less then End Date').css("color", "Red");
+            }
+            else {
+                $.ajax({
+                    url: "/Home/AddDaliTask",
+                    type: "POST",
+                    dataType: "Json",
+                    contentType: "application/json;charset:utf-8",
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        debugger;
+                        if (result.Success == "1") {
+                            swal({
+                                title: "Success!",
+                                text: result.message,
+                                type: "success"
+                            }, function () {
+                                window.location.href = result.url;
+                                clear()
+                            });
+                        }
+                        else if (result.Success == "0") {
+                            sweetAlert({
+                                title: "Oops...",
+                                text: result.message,
+                                type: "error"
+                            }, function () {
+                                window.location.href = result.url;
+                                clear()
+                            });
+                        }
+                        else {
+                            sweetAlert({
+                                title: "Oops...",
+                                text: result.message,
+                                type: "error"
+                            }, function () {
+                                window.location.href = result.url;
+                                clear()
+                            });
+                           
+
+
+                        }
+                    },
+                    error: function (result) {
+                        if (result.Success == "-1") {
+                            sweetAlert("Oops...", "Something went wrong!", "error");
+                        }
+
+                    }
+
+                });
+                return false;
+            }
+
+        });
+
+    });
+    function clear() {
+        $("#TechstackID").val(''),
+            $("#JiraID").val(''),
+            $("#DeveloperID").val(''),
+            $("#DepartmentID").val(''),
+            $("#ModuleID").val(''),
+            $("#Description").val(''),
+            $("#StartDate").val(''),
+            $("#EndDate").val(''),
+            $("#StatusID").val(''),
+            $("#Remark").val('')
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        
+        $("#TechstackID").change(function () {
+            debugger;
+            var val = $("#TechstackID").val();
+            if (val == "") {
+                $('#DeveloperID').html('');
+                $("#DeveloperID").append('<option> --Please Select--</option>');
+            }
+            else {
+                $.ajax({
+                    url:'@Url.Action("DropdownDevloper","Home")',
+                    data: { stackId: val },
+                    success: function (result) {
+
+                        debugger;
+                        $("#DeveloperID").empty();
+                        $.each(result, function (i, val) {
+
+                            $("#DeveloperID").append("<option value='" + val.DeveloperID + "'>" + val.DeveloperName + "</option>")
+                        });
+                    }
+                });
+            }
+           
+           
+            
+        });
+    });
+</script>

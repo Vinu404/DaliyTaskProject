@@ -1,0 +1,211 @@
+﻿@model IEnumerable<Daily_Test_Management_project.Models.Reportlist>
+
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+    #date {
+        height: 2rem;
+        width: 11rem;
+        border-radius: 10px;
+        padding-left: 18px;
+        margin-left: 8px;
+    }
+
+
+    #lbl {
+        font-size: 1rem;
+        font-weight: bolder;
+        margin-left: -17rem;
+    }
+
+    #btn {
+        height: 2rem;
+        width: 5rem;
+        margin-left: 1rem;
+        margin-top: 0rem;
+        padding-top: -1rem;
+        padding-top: 3px;
+    }
+</style>
+<div style="margin-top:11rem" class="container ">
+
+    <div style="margin-bottom:1rem">
+
+        <label id="lbl">CreatedDate :-</label><input id="date" type="date" class="form-group" />
+        @*<label id="lbl">EndDate :-</label><input id="date1" type="date" class="form-group" />*@
+        <button id="btn" class="btn btn-primary">View</button>
+
+
+    </div>
+
+
+    <div style="margin: 0rem -17rem;">
+        <table id="table1" class="table table-bordered table-striped table-hover ">
+            <thead class="bg-success text-white text-center m-4">
+                <tr>
+                    <td>TechStack</td>
+                    <td>JIRA ID</td>
+                    <td>DEVELOPER NAME</td>
+                    <td>DEPARTMENT NAME</td>
+                    <td>MODULE</td>
+                    <td>DESCRIPTION</td>
+                    <td>START DATE</td>
+                    <td>END DATE</td>
+                    <td>STATUS</td>
+                    <td>Remark</td>
+                    <td>Check Your Task</td>
+                </tr>
+            </thead>
+            <tbody id="Datafilter">
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TechstackID)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JiraID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeveloperID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DepartmentID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
+                        <td>
+                            <a style="padding-left:4rem" href="#" title="CheckTask"><input type="checkbox" /></a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <span id="msg"></span>
+    </div>
+    @* <a id="excel" style="margin-left:-17rem" class="btn btn-primary" href="@Url.Action("ExportToExcel", "home")">ExportToExcel</a>*@
+    @* <button class="btn btn-primary" id="excel" style="margin-left:-17rem">ExportToExcel</button>*@
+</div>
+
+
+
+<script src="~/Scripts/reportsJS.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#btn").click(function () {
+            var strdate = $("#date").val();
+
+            //var enddate = $("#date1").val();
+            var setData = $("#Datafilter");
+            setData.html("");
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '@Url.Action("RecordsFilterDeveloper","Home")',
+                    data: { createdDate: strdate },
+                    success: function (result) {
+
+
+                        if (result.length == 0) {
+                            setData.append('<tr style="color:red"><td colspan="4"><strong>No Task is Create on this Date ' + strdate + '</strong></td></tr>')
+                        } else {
+                            $.each(result, function (i, value) {
+
+                                //var strdate = Getdate(value.StartDate);
+                                //var enddate = Getdate(value.EndDate);
+                                var dt = new Date(parseInt(value.StartDate.replace('/Date(', '')))
+                                var str1date = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+                                var dt = new Date(parseInt(value.EndDate.replace('/Date(', '')))
+                                var EnDate = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+
+
+                                var data = "<tr>" +
+                                    "<td>" + value.TechstackID + "</td>" +
+                                    "<td>" + value.JiraID + "</td>" +
+                                    "<td>" + value.DeveloperID + "</td>" +
+                                    "<td>" + value.DepartmentID + "</td>" +
+                                    "<td>" + value.ModuleID + "</td>" +
+                                    "<td>" + value.Description + "</td>" +
+                                    "<td>" + str1date + "</td>" +
+                                    "<td>" + EnDate + "</td>" +
+                                    "<td>" + value.StatusID + "</td>" +
+                                    "<td>" + value.Remark + "</td>" +
+                                    "<td>"
+                                        '<a style="padding-left:4rem" href="#" title="CheckTask"><input type="checkbox" /></a>'
+                                "</td>" + 
+             
+                                    "</tr>";
+                                setData.append(data);
+
+
+                            });
+                        }
+                    },
+                    error:
+                        function (response) {
+                            alert("Error: " + response);
+                        }
+                });
+        });
+        //function Getdate(startdate) {
+        //   /* debugger;*/
+        //    var StartDateServer = startdate;
+        //var parsedDate = new Date(parseInt(StartDateServer.substr(6)));
+        //var finalDate = parsedDate.toLocaleDateString();
+        //    return finalDate
+
+        //}
+
+        function Adddate(number, size) {
+            debugger;
+            var s = "0000" + number;
+            return s.substr(s.length - size);
+        }
+
+        $("#excel").click(function () {
+            var createdate = $("#date").val();
+            $.ajax({
+                url: '/Home/ExportToExcel',
+                type: 'Post',
+                data: { createddate: createdate },
+                success: function () {
+
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+
+    });
+</script>

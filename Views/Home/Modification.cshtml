@@ -1,0 +1,311 @@
+﻿@*@model IEnumerable<Daily_Test_Management_project.Models.Reportlist>*@
+@model PagedList.IPagedList<Daily_Test_Management_project.Models.Reportlist>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Modification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<br />
+<br />
+<style>
+    #table1 {
+        margin: 6rem 8rem 0 4rem;
+    }
+
+    li a {
+        padding: 1rem
+    }
+
+    .serch {
+        float: right;
+        margin-top: 5rem;
+        margin-right: -15rem;
+    }
+
+    #btn {
+        margin: -2.5rem 0rem 0px 17rem;
+        float: left;
+        color: white;
+    }
+
+    .pagination {
+        margin-left: 3rem;
+        margin-top: -1rem;
+    }
+</style>
+
+
+<div class="container ">
+    <div class="serch">
+        <input id="search" placeholder="Search By Developer Name" type="text" class="form-control" />
+        <button id="btn" class="btn btn-dark"><i id="src" class='fa fa-search'></i></button>
+        <label id="lbl1"></label>
+
+    </div>
+</div>
+<div class="container m-lg-5">
+    @if (TempData["massage"] != null)
+    {
+        <div style="margin: 10px 66rem -5rem -20rem; " class="alert alert-success">
+            <strong>Success!</strong> @TempData["massage"]
+           
+        </div>
+    }
+
+    <div style="margin: 0rem -15rem 0rem -27rem ">
+
+        <table id="table1" class="table table-bordered table-striped table-hover ">
+            <thead style="background: #dd5511" class="text-white text-center m-4">
+                <tr>
+                    <td>TechStack</td>
+                    <td>JIRA ID</td>
+                    <td>DEVELOPER NAME</td>
+                    <td>DEPARTMENT NAME</td>
+                    <td>MODULE</td>
+                    <td>DESCRIPTION</td>
+                    <td>START DATE</td>
+                    <td>END DATE</td>
+                    <td>STATUS</td>
+                    <td>Remark</td>
+                    <td></td>
+                </tr>
+            </thead>
+
+
+            <tbody id="Datafilter">
+            </tbody>
+        </table>
+
+        @using (Html.BeginForm("Modification", "Home", FormMethod.Get, new { id = "form1" }))
+
+        {
+            <div id='Paging' style="text-align: center">
+                @*Dorpdownlist generation code*@
+                Page Size: @Html.DropDownList("pageSize")
+
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                of @Model.PageCount
+
+                @Html.PagedListPager(Model, page => Url.Action("Modification", new { page, pageSize = ViewBag.psize, @class = "pagination" }))
+            </div>
+        }
+
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<script>
+    window.setTimeout(function () {
+        $(".alert").fadeTo(300, 0).slideUp(200, function () {
+            $(this).remove();
+        });
+
+    }, 3000);
+
+    $(function () {
+        $("#pageSize").change(function () {
+
+            $("#form1").submit();
+        });
+    });
+</script>
+<script>
+   
+   
+</script>
+<script>
+    $(document).ready(function () {
+        var name = $("#search").val()
+        if (name.trim() == '') {
+
+        }
+        var setData = $("#Datafilter");
+        setData.html("");
+        $.ajax({
+            url: '@Url.Action("DataAdminModfication","Home")',
+            dataType: "JSON",
+            type: "GET",
+            contentType: "application/json;charset:utf-8",
+            beforeSend: function () {
+                $('#loading').show();
+            },
+            success: function (result) {
+                debugger;
+                $.each(result, function (i, value) {
+                    var dt = new Date(parseInt(value.StartDate.replace('/Date(', '')))
+                    var str1date = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+                    var dt = new Date(parseInt(value.EndDate.replace('/Date(', '')))
+                    var EnDate = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+
+
+                    var data = "<tr>" +
+                        "<td>" + value.TechstackID + "</td>" +
+                        "<td>" + value.JiraID + "</td>" +
+                        "<td>" + value.DeveloperID + "</td>" +
+                        "<td>" + value.DepartmentID + "</td>" +
+                        "<td>" + value.ModuleID + "</td>" +
+                        "<td>" + value.Description + "</td>" +
+                        "<td>" + str1date + "</td>" +
+                        "<td>" + EnDate + "</td>" +
+                        "<td>" + value.StatusID + "</td>" +
+                        "<td>" + value.Remark + "</td>" +
+                        "<td>" + '<a href="update/' + value.ID + '" title="Edit"><i style="font-size:1.5rem;color:black"   class="fa fa-edit"></i></a>' + "</td>" +
+                        "</tr>";
+                    setData.append(data);
+                });
+            },
+            complete: function () {
+                $('#loading').hide();
+            },
+            error: function (data) {
+                alert(data);
+            },
+        });
+        function Adddate(number, size) {
+            debugger;
+            var s = "0000" + number;
+            return s.substr(s.length - size);
+        }
+
+    });
+</script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#search").keyup(function () {
+            var setData = $("#Datafilter");
+            setData.html("");
+            var name = $("#search").val()
+            if (name.trim() == '') {
+                $.ajax({
+                    url: '@Url.Action("DataAdminModfication","Home")',
+                    dataType: "JSON",
+                    type: "GET",
+                    contentType: "application/json;charset:utf-8",
+                    beforeSend: function () {
+                        $('#loading').show();
+                    },
+                    success: function (result) {
+                        debugger;
+                        $.each(result, function (i, value) {
+                            var dt = new Date(parseInt(value.StartDate.replace('/Date(', '')))
+                            var str1date = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+                            var dt = new Date(parseInt(value.EndDate.replace('/Date(', '')))
+                            var EnDate = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+
+
+                            var data = "<tr>" +
+                                "<td>" + value.TechstackID + "</td>" +
+                                "<td>" + value.JiraID + "</td>" +
+                                "<td>" + value.DeveloperID + "</td>" +
+                                "<td>" + value.DepartmentID + "</td>" +
+                                "<td>" + value.ModuleID + "</td>" +
+                                "<td>" + value.Description + "</td>" +
+                                "<td>" + str1date + "</td>" +
+                                "<td>" + EnDate + "</td>" +
+                                "<td>" + value.StatusID + "</td>" +
+                                "<td>" + value.Remark + "</td>" +
+                                "<td>" + '<a href="update/' + value.ID + '" title="Edit"><i style="font-size:1.5rem;color:black" class="fa fa-edit"></i></a>' + "</td>" +
+                                "</tr>";
+                            setData.append(data);
+                        });
+                    },
+                    complete: function () {
+                        $('#loading').hide();
+                    },
+                    error: function (data) {
+                        alert(data);
+                    },
+                });
+            }
+            else {
+                var setData = $("#Datafilter");
+                setData.html("");
+                $("#search").removeAttr('style');
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '@Url.Action("SerchDeveloper","Home")',
+                    data: { Developername: name },
+                    beforeSend: function () {
+                        $('#loading').show();
+                    },
+                    success: function (result) {
+                        debugger;
+                        if (result.length == 0) {
+                            setData.append('<tr ><td colspan="4"><strong style="color:Red">' + name + ' is Not Found,Select Valid DeveloperName </strong></td></tr>')
+                        } else {
+                            $.each(result, function (i, value) {
+                                var dt = new Date(parseInt(value.StartDate.replace('/Date(', '')))
+                                var str1date = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+                                var dt = new Date(parseInt(value.EndDate.replace('/Date(', '')))
+                                var EnDate = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+
+
+                                var data = "<tr>" +
+                                    "<td>" + value.TechstackID + "</td>" +
+                                    "<td>" + value.JiraID + "</td>" +
+                                    "<td>" + value.DeveloperID + "</td>" +
+                                    "<td>" + value.DepartmentID + "</td>" +
+                                    "<td>" + value.ModuleID + "</td>" +
+                                    "<td>" + value.Description + "</td>" +
+                                    "<td>" + str1date + "</td>" +
+                                    "<td>" + EnDate + "</td>" +
+                                    "<td>" + value.StatusID + "</td>" +
+                                    "<td>" + value.Remark + "</td>" +
+                                    "<td>" + '<a href="update/' + value.ID + '" title="Edit"><i style="font-size:1.5rem;color:black" class="fa fa-edit"></i></a>' + "</td>" +
+                                    "</tr>";
+                                setData.append(data);
+
+
+                            });
+                        }
+                    },
+                    complete: function () {
+                        $('#loading').hide();
+                    },
+                    error:
+                        function (response) {
+                            alert("Error: " + response);
+                            $(".loader").hide();
+                        }
+                });
+            }
+
+
+
+
+
+        });
+
+
+
+        function Adddate(number, size) {
+            debugger;
+            var s = "0000" + number;
+            return s.substr(s.length - size);
+        }
+
+
+
+
+
+
+    });
+</script>
+

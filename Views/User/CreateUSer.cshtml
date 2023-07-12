@@ -1,0 +1,240 @@
+﻿@model Daily_Test_Management_project.Models.CreateUSer
+@{
+    ViewBag.Title = "CreateUSer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/CreateUSer/css/main.css" rel="stylesheet" />
+<style>
+    #msg {
+        position: absolute;
+        padding-top: 35.5px;
+    }
+</style>
+<body>
+    <div style="margin-top:4rem" class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+        @if (TempData["Usermsg"] != null)
+        {
+            <div style="margin: 12px 42rem 9px 10rem" class="alert alert-success">
+                <strong>Success!</strong>@TempData["Usermsg"]
+
+            </div>
+        }
+        <div class="wrapper wrapper--w790">
+            <div style="color: #fb6c08" class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">User Creation</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-row">
+                            <div class="name">USERID</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="form-control" autocomplete="off" name="userID" placeholder="Enter UserID" id="UserID" required>
+                                    @Html.ValidationMessageFor(m => m.userID, "", new { @class = "text-danger", @id = "msg" })
+                                </div>
+                                <p id="check"></p>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">PASSWORD</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="form-control" type="password" autocomplete="off" name="password" placeholder="Enter Password" id="password" required>
+                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger", @id = "msg" });
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">DEVELOPER NAME</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="form-control" autocomplete="off" type="text" name="Developername" placeholder="Enter DeveloperName" id="Developername" required>
+                                    <br />
+                                    @Html.ValidationMessageFor(m => m.developerID, "", new { @class = "text-danger", @id = "msg" });
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">ACCESS MODULE</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" name="Accessmodule" placeholder="Enter AccessModule" id="AccessModule" required>
+                                    @Html.ValidationMessageFor(m => m.AccessModule, "", new { @class = "text-danger", @id = "msg" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">ACTIVE STATUS</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <select class="form-control" id="Active" name="Active" required>
+                                        <option value="True">Active</option>
+                                        <option value="false">Deactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Active, "", new { @class = "text-danger", @id = "msg" })
+                        </div>
+                        <div class="form-row">
+                            <div class="name">ROLE</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <select class="form-control" id="RoleID" name="ROLEID">
+                                        <option value=1>Admin</option>
+                                        <option value="2">User</option>
+                                    </select>
+                                    @Html.ValidationMessageFor(m => m.RoleID, "", new { @class = "text-danger", @id = "msg" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">CREATED BY</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input style="font-weight:bold" name="CREATED BY" class="form-control" value="Admin" type="text" id="CreatedBy" required>
+                                    @Html.ValidationMessageFor(m => m.CreatedBy, "", new { @class = "text-danger", @id = "msg" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">CREATED Date</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="form-control" name="CREATED DATE" type="text" placeholder="dd-mm-yyyy" id="CreatedDate" required>
+                                    @Html.ValidationMessageFor(m => m.CreatedDate, "", new { @class = "text-danger", @id = "msg" })
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-left:10rem" class="form-row m-b-55">
+
+                            <div class="row row-space">
+                                <div class="col-2">
+                                    <input type="submit" class="btn btn-primary" value="Create" id="btn" />
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group-desc">
+                                        <input type="reset" class="btn btn-danger" value="Cancel" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#btn").click(function () {
+            createUser();
+        })
+    });
+
+
+    var createUser = function () {
+
+        var obj = {
+            UserID = $("#UserID").val(),
+            Password = $("#password").val(),
+            ACCESSMODULE = $("#AccessModule").val(),
+            ActiveStatus = $("#Active").val(),
+            CreatedBy = $("#CreatedBy").val(),
+            CreatedDate = $("#CreatedDate").val(),
+            RoleID = $("#RoleID").val()
+        }
+
+        $.ajax({
+            debugger;
+            url: '/User/CreateUSer',
+            datatype: "json",
+            type: 'Post',
+            data: { 'createUSer': obj, 'd': $("#Developername").val()},
+            contentType: "application/json;charset=utf-8",
+            success: function () {
+                if (@TempData["Usermsg"]!= null) {
+                    alert(@TempData["Usermsg"]);
+                }
+
+            },
+            error: function () {
+                alert("USercreate Failed..");
+            }
+
+        });
+
+    }
+
+
+
+</script>
+<script>
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(300, function () {
+            $(this).remove();
+        });
+
+    }, 3000);
+
+    $(document).ready(function () {
+        debugger;
+
+        $("#UserID").change(function () {
+
+
+            $.ajax({
+                url: '@Url.Action("UserExist","User")',
+                data: { "userID": $("#UserID").val() },
+                type: "Post",
+                datatype: "Json",
+                success: function (data) {
+                    debugger;
+                    if (data == 0) {
+                        $("#check").html("<font color='RED'>UserID can't be Blanck...</font>");
+                    }
+                    else if (data == 1) {
+                        $("#check").html('<font color="Red">UserID Already Exist...</font>');
+                        $("#UserID").css("border-color", "Red");
+                    }
+                    else if (data == 2) {
+                        $("#check").html('<font color="Green">Available UserID...</font>');
+                        $("#UserID").css("border-color", "Green");
+
+                    }
+                },
+                error: function (data) {
+                    alert(data)
+                }
+            });
+        })
+    });
+
+
+</script>
+<script>
+    $("#CreatedDate").datepicker({
+        minDate: new Date(),
+        /*maxDate: new Date(),*/
+        dateFormat: 'dd/mm/yy'
+    });
+
+    
+
+
+</script>

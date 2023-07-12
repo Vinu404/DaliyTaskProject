@@ -1,0 +1,652 @@
+﻿
+
+@model PagedList.IPagedList<Daily_Test_Management_project.Models.Reportlist>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+<style>
+    #date {
+        height: 27px;
+        width: 7rem;
+        border-radius: 10px;
+        padding-left: 18px;
+        margin-left: 7px;
+       
+        padding-left: 16px;
+        font-size: 17px;
+        box-sizing: content-box;
+        box-shadow: 1px 2px;
+    }
+
+    #date1 {
+        height: 27px;
+        width: 7rem;
+        border-radius: 10px;
+        padding-left: 18px;
+        margin-left: 34px;
+        
+        padding-left: 16px;
+        font-size: 17px;
+        box-sizing: content-box;
+        box-shadow: 1px 2px;
+    }
+
+
+    #lbl {
+        font-size: 19px;
+        font-weight: bolder;
+        margin-left: -17rem;
+    }
+
+    #lbl1 {
+        margin-left: 2rem;
+        font-size: 19px;
+        font-weight: 700;
+    }
+
+    #btn {
+        height: 29px;
+        width: 5rem;
+        border-radius: 8px;
+        margin-left: 24px;
+        margin-top: -1rem;
+        padding-top: 3px;
+        background-color: #eb5d11;
+        font-weight: bolder;
+        color: black;
+        box-sizing: border-box;
+        box-shadow: 0px 1px black;
+        cursor: pointer;
+    }
+
+    li a {
+        padding: 1rem
+    }
+
+    .pagination {
+        margin-left: -1rem;
+        margin-top: -1rem;
+    }
+
+    #tr1 {
+        color: white;
+        font-weight: 600;
+        font-family: 'FontAwesome';
+    }
+
+    td {
+        text-align: center;
+    }
+
+    .filter {
+        background-color: #d8daeb;
+        height: 11rem;
+        width: 170%;
+        padding: 47px 0rem 5rem 54rem;
+        margin-left: -23.5rem;
+        margin-top: -12.5rem;
+        border-bottom: 1.5px solid black;
+    }
+
+    #StatusID {
+        border: 1px solid;
+        height: 30px;
+        width: 30mm;
+        border-radius: 7px;
+        box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0rem 0px 0px 39px;
+    }
+    #TechstackID {
+        border: 1px solid;
+        height: 30px;
+        width: 30mm;
+        border-radius: 7px;
+        box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0rem 0px 0px 6px;
+    }
+
+    #lbl1 {
+        margin-left: -17rem;
+        padding: 14px 0px;
+        font-size: 19px;
+    }
+
+    #sta {
+        margin: 2rem 0 0 -19rem;
+    }
+
+    #lb {
+        margin-left: 1rem;
+        font-size: 19px;
+        font-weight: 700;
+    }
+</style>
+
+<div style="margin-top:17rem" class="container ">
+    @*@Html.Partial("_lodaing")*@
+    @*@Html.Partial("_Loading")*@
+
+    <div class="container">
+        <div class="filter">
+
+            <label id="lbl">From Date :-</label><input id="date" type="text" placeholder="dd-mm-yyyy" class="start-date" />
+            <label id="Startinvalid" class="label--desc"></label>
+            <label id="lb">Status:-</label>
+            @Html.DropDownList("StatusID", ViewBag.statuslist as SelectList, new { @class = "from-control" })
+            <br />
+            <label id="lbl1">To Date :-</label><input id="date1" type="text" placeholder="dd-mm-yyyy" class="end-date" />
+            <label id="Endinvalid" class="label--desc"></label>
+            <label id="lb">TechStack:-</label>
+            @Html.DropDownList("TechstackID", ViewBag.TechStack as SelectList, new { @class = "from-control" })
+
+            @*<select id="techstack">
+                    <option value="All">ALL</option>
+                    <option value="Tech Support + SQL">Tech Support + SQL</option>
+                    <option value="Full Stack">Full Stack</option>
+                    <option value="BA">BA</option>
+                </select>*@
+            <button id="btn" class="">View</button>
+            <a title="dowload excel file" id="excel" style=" margin-left: 2rem" ; href="@Url.Action("ExcelSheet", "Home")"><i style="font-size: 33px; color: #539153; margin-top: -2rem; margin-left: 51rem;" class='far fa-file-excel'></i></a>
+
+        </div>
+
+    </div>
+
+    <div style="margin: 0rem -21.8rem;">
+
+        <table id="table1" class="table table-bordered table-responsive-sm table-striped table-hover ">
+            <thead style="background: #dd5511" class="text-center m-4">
+                <tr id="tr1">
+                    <td>TechStack</td>
+                    <td>JIRA ID</td>
+                    <td>DEVELOPER NAME</td>
+                    <td>DEPARTMENT NAME</td>
+                    <td>MODULE</td>
+                    <td>DESCRIPTION</td>
+                    <td>START DATE</td>
+                    <td>END DATE</td>
+                    <td>STATUS</td>
+                    <td>Remark</td>
+
+            </thead>
+            <tbody id="Datafilter">
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TechstackID)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JiraID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeveloperID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DepartmentID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @using (Html.BeginForm("ReportsAdmin", "Home", FormMethod.Get, new { id = "form1" }))
+
+        {
+            <div id='Paging' style="text-align: center">
+                @*Dorpdownlist generation code*@
+                Page Size: @Html.DropDownList("pageSize")
+
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                of @Model.PageCount
+
+                @Html.PagedListPager(Model, page => Url.Action("ReportsAdmin", new { page, pageSize = ViewBag.psize, @class = "pagination" }))
+            </div>
+        }
+
+        <span id="msg"></span>
+    </div>
+    @* <button class="btn btn-primary" id="excel" style="margin-left:-17rem">ExportToExcel</button>*@
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+
+<script>
+    $("#date").datepicker({
+        /*maxDate: new Date(),*/
+        dateFormat: 'dd/mm/yy'
+
+    }).datepicker('setDate', 'today');
+
+    $("#date1").datepicker({
+        /*maxDate: new Date(),*/
+        dateFormat: 'dd/mm/yy'
+
+    }).datepicker('setDate', 'today');
+
+
+</script>
+
+<script>
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        
+        var strdate;
+        $("#btn").click(function () {
+            strdate = $("#date").val();
+            var enddate = $("#date1").val();
+            var data = $("#StatusID").val();
+            var techstack = $("#TechstackID").val();
+            debugger;
+            if (strdate != '' && enddate != '' && data != '' && techstack!='') {
+                
+                var setData = $("#Datafilter");
+                setData.html("");
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: '@Url.Action("CreateDateStausFilter","User")',
+                        data: { status: data, fromdate: strdate, Todate: enddate, stackID: techstack },
+                        beforeSend: function () {
+                            $('#loading').show();
+                        },
+                        success: function (result) {
+                            debugger;
+
+                            if (result.length == 0) {
+                                setData.append('<tr style="color:red"><td colspan="4"><strong>No Task is Create on this Date ' + strdate + ' TO ' + enddate + '</strong></td></tr>')
+                            } else {
+                                $.each(result, function (i, value) {
+
+                                    //var strdate = Getdate(value.StartDate);
+                                    //var enddate = Getdate(value.EndDate);
+                                    var dt = new Date(parseInt(value.StartDate.replace('/Date(', '')))
+                                    var str1date = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+                                    var dt = new Date(parseInt(value.EndDate.replace('/Date(', '')))
+                                    var EnDate = Adddate(dt.getDate(), 2) + '-' + Adddate(dt.getMonth() + 1, 2) + '-' + Adddate(dt.getFullYear(), 4)
+
+
+
+                                    var data = "<tr>" +
+                                        "<td>" + value.TechstackID + "</td>" +
+                                        "<td>" + value.JiraID + "</td>" +
+                                        "<td>" + value.DeveloperID + "</td>" +
+                                        "<td>" + value.DepartmentID + "</td>" +
+                                        "<td>" + value.ModuleID + "</td>" +
+                                        "<td>" + value.Description + "</td>" +
+                                        "<td>" + str1date + "</td>" +
+                                        "<td>" + EnDate + "</td>" +
+                                        "<td>" + value.StatusID + "</td>" +
+                                        "<td>" + value.Remark + "</td>" +
+
+                                        "</tr>";
+                                    setData.append(data);
+
+
+                                });
+                            }
+                        },
+                        complete: function () {
+                            $('#loading').hide();
+                        },
+                        error:
+                            function (response) {
+                                alert("Error: " + response);
+                                $('#loading').hide();
+                            }
+                    });
+
+
+            }
+
+            else {
+                if (strdate == '' && enddate == '') {
+                    $("#date").attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("#date1").attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                }
+                else if (strdate == '') {
+                    $("#date").attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("#date1").removeAttr('style');
+                }
+                else {
+                    $("#date").removeAttr('style');
+                    $("#date1").attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+
+                }
+
+            }
+
+
+        });
+
+        $("#date").click(function () {
+            $(this).removeAttr("style");
+        });
+        $("#date1").click(function () {
+            $(this).removeAttr("style");
+        });
+
+        //function Getdate(startdate) {
+        //   /* debugger;*/
+        //    var StartDateServer = startdate;
+        //var parsedDate = new Date(parseInt(StartDateServer.substr(6)));
+        //var finalDate = parsedDate.toLocaleDateString();
+        //    return finalDate
+
+        //}
+
+        function Adddate(number, size) {
+
+            var s = "0000" + number;
+            return s.substr(s.length - size);
+        }
+
+
+        $(function () {
+            $("#pageSize").change(function () {
+
+                $("#form1").submit();
+            });
+        });
+
+
+
+
+    });
+</script>
+@*<script>
+        function exportToExcel() {
+
+
+                var strdate = $("#date").val();
+                var enddate = $("#date1").val();
+                var data = $("#StatusID").val();
+                $.ajax({
+                    type: "GET",
+
+                    url: '@Url.Action("ExportToExcel", "Home")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { status: data, Createdate: strdate, Enddate: enddate },
+                    beforeSend: function () {
+
+                    },
+                    success: function (response) {
+                        var blob = new Blob([response], { type: 'application/ms-excel' });
+                        var dowloadurl = URL.createObjectURL(blob);
+                        var a = document.createElement("a");
+                        a.href = dowloadurl;
+                        a.download = 'ReportFile.xls';
+                        document.body.appendChild(a);
+                        a.click();
+                    },
+                    complete: function () {
+
+                    },
+
+                });
+                return false;
+
+
+        }
+    </script>*@
+
+<script>
+    $("#date").datepicker({
+        /*minDate: new Date(),*/
+        maxDate: new Date(),
+        dateFormat: 'dd/mm/yy'
+
+    })/*.datepicker('setDate', 'today');*/
+
+    $("#date1").datepicker({
+        minDate: new Date(),
+        dateFormat: 'dd/mm/yy'
+
+    });
+
+    var val2;
+    var val4;
+    $("#date").datepicker().on("change", function () {
+
+        debugger;
+        val2 = Datecheck("date", "Startinvalid");
+
+        if (val2 == false && val4 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+        else if (val2 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+        else if (val4 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+
+        else if (val2 == true && val4 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+        else if (val2 == false && val4 == true) {
+            $("button").attr('disabled', 'disabled');
+        }
+
+        else {
+            $("button").removeAttr('disabled');
+            $("#Startinvalid").html('');
+        }
+
+
+    });
+
+
+    $("#date1").datepicker().on("change", function () {
+        debugger;
+        val4 = Datecheck("date1", "Endinvalid");
+        if (val2 == false && val4 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+        else if (val2 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+        else if (val4 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+
+        else if (val2 == true && val4 == false) {
+            $("button").attr('disabled', 'disabled');
+        }
+        else if (val2 == false && val4 == true) {
+            $("button").attr('disabled', 'disabled');
+        }
+        else {
+            $("button").removeAttr('disabled');
+            $("#Endinvalid").html('');
+
+        }
+    });
+
+
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        debugger;
+        var val1;
+        var val3;
+
+
+
+        $("#date").on('onselect keyup change', function () {
+            debugger;
+
+
+            val1 = Datecheck("date", "Startinvalid");
+
+            if (val1 == false && val3 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else if (val1 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else if (val3 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else if (val1 == true && val3 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else if (val1 == false && val3 == true) {
+                $("button").attr('disabled', 'disabled');
+            }
+
+            else {
+                $("button").removeAttr('disabled');
+                $("#Startinvalid").html(' ');
+            }
+
+
+
+        });
+
+        $("#date1").on('onselect keyup change', function () {
+            val3 = Datecheck("date1", "Endinvalid");
+            if (val1 == false && val3 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else if (val1 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else if (val3 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else if (val1 == true && val3 == false) {
+                $("button").attr('disabled', 'disabled');
+            }
+            else {
+                $("button").removeAttr('disabled');
+                $("#Endinvalid").html('');
+
+            }
+
+        });
+
+
+
+
+
+    });
+
+    function Datecheck(value, option) {
+
+
+        var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+        var Val_date = $('#' + value).val();
+        if (Val_date.match(dateformat)) {
+            var seperator1 = Val_date.split('/');
+            var seperator2 = Val_date.split('-');
+
+            if (seperator1.length > 1) {
+                var splitdate = Val_date.split('/');
+            }
+            else if (seperator2.length > 1) {
+                var splitdate = Val_date.split('-');
+            }
+            var dd = parseInt(splitdate[0]);
+            var mm = parseInt(splitdate[1]);
+            var yy = parseInt(splitdate[2]);
+            var ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if (mm == 1 || mm > 2) {
+                if (dd > ListofDays[mm - 1]) {
+                    $("#" + option).html("Invalid date formate!").css("color", "Red");;
+                    $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("button").attr('disabled', 'disabled');
+                    return false;
+                }
+            }
+            if (mm == 2) {
+                var lyear = false;
+                if ((!(yy % 4) && yy % 100) || !(yy % 400)) {
+                    lyear = true;
+                }
+                if ((lyear == false) && (dd >= 29)) {
+                    $("#" + option).html("Invalid date formate!").css("color", "Red");;
+                    $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("button").attr('disabled', 'disabled');
+                    return false;
+                }
+
+
+                if ((lyear == true) && (dd > 29)) {
+                    $("#" + option).html("Invalid date formate!").css("color", "Red");;
+                    $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+                    $("button").attr('disabled', 'disabled');
+                    return false;
+                }
+
+
+
+            }
+        }
+        else {
+            $("#" + option).html("Invalid date formate!").css("color", "Red");
+            $("#" + value).attr("required", "true").css({ "border": "1px solid Red", "box-shadow": "4px 3px #6acceb" });
+            $("button").attr('disabled', 'disabled');
+            return false;
+        }
+        $("#" + value).removeAttr('style');
+        $("#" + option).removeAttr('style');
+        $("button").removeAttr('disabled');
+        return true;
+    }
+    CheckValidate = function () {
+        debugger;
+        var start_date = $("#StartDate").val(); //2013-09-5
+        var end_date = $("#EndDate").val(); //2013-09-10
+        start_date = start_date.split('/');
+        end_date = end_date.split('/');
+
+        if (start_date <= end_date) {
+            $("button").attr('disabled', 'disabled');
+            $("#Startinvalid").html('Date should be less then End Date').css("color", "Red");
+            return false;
+        }
+    }
+</script>

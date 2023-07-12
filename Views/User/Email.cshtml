@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "Email";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #lbl {
+        color: black;
+    }
+</style>
+<div style="margin-top:7rem" class="wrapper wrapper--w790">
+    <div style="color: #fb6c08" class="card card-5">
+
+        <div class="card-body">
+            <form id="uploader"  enctype="multipart/form-data">
+                <div class="form-row">
+                    <label id="lbl">TO</label>
+                    <div class="value">
+                        <div class="input-group">
+                            <input type="email" class="form-control" autocomplete="off" name="Email" id="Email" required>
+                            
+                        </div>
+                        <p id="check"></p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    @*<div class="name">CC</div>*@
+                    <label id="lbl">CC</label>
+                    <div class="value">
+                        <div class="input-group">
+                            <input type="email" class="form-control" autocomplete="off" name="cc" id="UserID" >
+                        </div>
+                        <p id="check"></p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label id="lbl">Subject</label>
+                    <div class="value">
+                        <div class="input-group">
+                            <input class="form-control" autocomplete="off" name="Subject" id="Subject">
+                        </div>
+                        <p id="check"></p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label id="lbl">Attach</label>
+                    <div class="value">
+                        <div class="input-group">
+                            <input type="file" name="Attach" id="Attach" class="form-control" multiple />
+                        </div>
+                        <p id="check"></p>
+                    </div>
+                </div>
+                <div class="form-row">
+
+                    <div class="value">
+                        <div class="input-group">
+
+                            <textarea class="form-control" rows="2" cols="500" style="height:20rem" id="Body"></textarea>
+                        </div>
+                        <p id="check"></p>
+                    </div>
+                </div>
+
+
+                <div class="form-row m-b-55">
+
+                    <div class="row row-space">
+                        <div class="col-2">
+                            <input type="submit" class="btn btn-primary" value="Send" id="btnSend" />
+                        </div>
+                        <div class="col-2">
+                            <div style="margin-left: -7rem;" class="input-group-desc">
+                                <input type="reset" class="btn btn-danger" value="Cancel" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script>
+    //$(function () {
+    //    $("#btnSend").click(function () {
+    //        debugger;
+           
+    //        var data = '{Email: "' + $("#Email").val() + '", Subject: "' + $("#Subject").val() + '", Body: "' + $("#Body").val() + '",Attach :"' + $("#Attach").val() + '" }';
+
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "/User/SendEmail",
+    //            data: JSON.stringify(data),
+    //            //contentType: "application/json; charset=utf-8",
+    //            dataType: "json",
+    //            success: function (response) {
+    //                debugger;
+    //                alert(response);
+    //            },
+    //            failure: function (response) {
+    //                alert(response.responseText);
+    //            },
+    //            error: function (response) {
+    //                alert(response.responseText);
+    //            }
+    //        });
+    //    });
+    //});
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        debugger;
+        $("#btnSend").click(function () {
+            debugger;
+            //if (window.FormData !== undefined) {
+                
+            //    var fileUpload = $("#Attach").get(0);
+            //    var files = fileUpload.files;
+
+            //    // Create FormData object  
+            //    var fileData = new FormData();
+
+            //    // Looping over all files and add it to FormData object  
+            //    for (var i = 0; i < files.length; i++) {
+            //        fileData.append(files[i].name, files[i]);
+            //    }
+
+            //    //// Adding one more key to FormData object  
+            //}
+            //fileData.append("FileName", FileName);
+
+            var obj = {
+                Email :$("#Email").val(),
+                Subject : $("#Subject").val(),
+                Body: $("#Body").val(),
+                /*Attach: fileData*/
+
+        
+            }
+            $.ajax({
+                type: "POST",
+                url: "/User/Email",
+                data: { 'email': obj},
+                //contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    if (response.status == 1) {
+                        alert(response.msg);
+                    }
+                    else if (response.status == 0) {
+                        alert(response.msg);
+                    }
+                },
+               
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+            
+
+        });
+    });
+</script>
